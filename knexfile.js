@@ -3,9 +3,12 @@ require('dotenv').load();
 module.exports = {
   development: {
     client: 'pg',
-    connection: process.env.DB_CONNECTION,
+    connection: process.env.DATABASE_URL,
     migrations: {
       tableName: 'knex_migrations'
+    },
+    seeds: {
+      directory: './seeds'
     }
   }
 };
