@@ -1,10 +1,9 @@
 var express = require('express');
 var router = express.Router();
+var api = require('./api');
 
 router.get('/', function(req, res, next) {
-  res.json({
-    title: 'Express Server Working'
-  });
+  res.send('authors');
 });
 
 module.exports = router;

@@ -4,16 +4,23 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var routes = require('./routes/index');
+var home = require('./routes/home');
+var books = require('./routes/books');
+var authors = require('./routes/authors');
 
 var app = express();
+
+//set JSON format
+app.set('json spaces', 2);
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use('/', routes);
+app.use('/', home);
+app.use('/books', books);
+app.use('/authors', authors);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -29,7 +36,7 @@ app.use(function(req, res, next) {
 if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
-    res.render('error', {
+    res.json({
       message: err.message,
       error: err
     });
@@ -40,7 +47,7 @@ if (app.get('env') === 'development') {
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
-  res.render('error', {
+  res.json({
     message: err.message,
     error: {}
   });
