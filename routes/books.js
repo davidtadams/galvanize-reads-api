@@ -29,8 +29,6 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/new', function(req, res, next) {
-  console.log(req.body);
-  console.log(req.body['testing']);
   if (req.body['title'] === undefined
         || req.body['genre'] === undefined
         || req.body['description'] === undefined
@@ -80,11 +78,19 @@ function addNewBook(book) {
   }
 
   bookObject.authors = [];
-  bookObject.authors.push({
-    author_id: author_id,
-    first_name: firstName,
-    last_name: lastName
-  });
+  if (firstName === null || lastName === null || author_id === null) {
+    bookObject.authors.push({
+      author_id: null,
+      first_name: "No authors added",
+      last_name: "No authors added"
+    });
+  } else {
+    bookObject.authors.push({
+      author_id: author_id,
+      first_name: firstName,
+      last_name: lastName
+    });
+  }
 
   return bookObject;
 }

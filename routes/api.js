@@ -13,8 +13,8 @@ module.exports = {
         'authors.id as author_id',
         'authors.first_name',
         'authors.last_name'
-      ).innerJoin("books_authors", "books.id", "books_authors.book_id")
-      .innerJoin("authors", "authors.id", "books_authors.author_id")
+      ).leftJoin("books_authors", "books.id", "books_authors.book_id")
+      .leftJoin("authors", "authors.id", "books_authors.author_id")
       .orderBy('books.id', 'desc');
     },
     createBook: function(bookData) {
