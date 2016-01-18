@@ -28,9 +28,40 @@ router.get('/', function(req, res, next) {
   })
 });
 
+router.post('/new', function(req, res, next) {
+  console.log(req.body);
+  console.log(req.body['testing']);
+  if (req.body['title'] === undefined
+        || req.body['genre'] === undefined
+        || req.body['description'] === undefined
+        || req.body['cover_url'] === undefined) {
+    res.json({
+      error: "The post data is incomplete",
+      documentation: 'https://github.com/davidtadams/galvanize-reads-api/blob/master/README.md'
+    });
+  }
 
+  api.books.createBook(req.body).then(function(book_id) {
+    for (var i = 0; i < req.body.authors.length; i++) {
+      api.books.associateBookAuthor(book_id[0], req.body.authors[i])
+        .then(function(results) {
+          if (results != 1) {
+            res.json({
+              error: "Book not craeted correctly"
+            })
+          }
+        })
+    }
 
+    res.json({
+      success: "Book created successfully"
+    });
+  })
 
+  res.json({
+    success: "Book created successfully"
+  });
+})
 
 
 function addNewBook(book) {
