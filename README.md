@@ -1,15 +1,6 @@
 # Galvanize Reads API
 ## API created for Galvanize Eats Assessment
 
-API Calls Documentation
+### Documentation pending (coming soon)
 
-
-'/' Home page
-
-
-Books
-
-
-
-
-Authors
+### [API link](http://galvanizereads.herokuapp.com/)
