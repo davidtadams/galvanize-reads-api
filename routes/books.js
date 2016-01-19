@@ -37,6 +37,7 @@ router.post('/new', function(req, res, next) {
       error: "The post data is incomplete",
       documentation: 'https://github.com/davidtadams/galvanize-reads-api/blob/master/README.md'
     });
+    return;
   }
 
   api.books.createBook(req.body).then(function(book_id) {
@@ -47,6 +48,7 @@ router.post('/new', function(req, res, next) {
             res.json({
               error: "Book not craeted correctly"
             })
+            return;
           }
         })
     }
@@ -55,10 +57,6 @@ router.post('/new', function(req, res, next) {
       success: "Book created successfully"
     });
   })
-
-  res.json({
-    success: "Book created successfully"
-  });
 })
 
 
@@ -80,9 +78,9 @@ function addNewBook(book) {
   bookObject.authors = [];
   if (firstName === null || lastName === null || author_id === null) {
     bookObject.authors.push({
-      author_id: null,
-      first_name: "No authors added",
-      last_name: "No authors added"
+      author_id: "No authors added",
+      first_name: null,
+      last_name: null
     });
   } else {
     bookObject.authors.push({

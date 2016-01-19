@@ -43,8 +43,8 @@ function addNewAuthor(author) {
   authorObject.books = [];
   if (bookTitle === null || bookID === null) {
     authorObject.books.push({
-      book_id: null,
-      book_title: "No books added"
+      book_id: "No books added",
+      book_title: null
     });
   } else {
     authorObject.books.push({
