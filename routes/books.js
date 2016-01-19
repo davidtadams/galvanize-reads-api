@@ -118,7 +118,7 @@ router.put('/:bookID/edit', function(req, res, next) {
   api.books.updateBook(req.params.bookID, req.body).then(function(results) {
     if (results != 1) {
       res.json({
-        error: "Book not edited correctly1"
+        error: "Book not edited correctly"
       })
       return;
     }
@@ -128,7 +128,7 @@ router.put('/:bookID/edit', function(req, res, next) {
           .then(function(results) {
             if (results != 1) {
               res.json({
-                error: "Book not created correctly3"
+                error: "Book not created correctly"
               })
               return;
             }

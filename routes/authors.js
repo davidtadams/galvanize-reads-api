@@ -101,6 +101,46 @@ router.delete('/:authorID/delete', function(req, res, next) {
   });
 });
 
+router.put('/:authorID/edit', function(req, res, next) {
+  if (req.body['first_name'] === undefined
+        || req.body['last_name'] === undefined
+        || req.body['bio'] === undefined
+        || req.body['portrait_url'] === undefined) {
+    res.json({
+      error: "The put data is incomplete",
+      documentation: 'https://github.com/davidtadams/galvanize-reads-api/blob/master/README.md'
+    });
+    return;
+  }
+
+  api.authors.updateAuthor(req.params.authorID, req.body).then(function(results) {
+    if (results != 1) {
+      res.json({
+        error: "Author not edited correctly"
+      })
+      return;
+    }
+    api.authors.deleteAllAssociationsAuthorBook(req.params.authorID).then(function(results) {
+      for (var i = 0; i < req.body.books.length; i++) {
+        api.authors.associateAuthorBook(req.params.authorID, req.body.books[i])
+          .then(function(results) {
+            if (results != 1) {
+              res.json({
+                error: "Author not created correctly"
+              })
+              return;
+            }
+          })
+      }
+
+      res.json({
+        success: "Author number: " + req.params.authorID + " edited successfully"
+      })
+    }).catch(function(error) {
+      console.log(error);
+    })
+  });
+});
 
 function addNewAuthor(author) {
   var authorObject = { };
