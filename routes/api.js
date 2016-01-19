@@ -92,6 +92,20 @@ module.exports = {
       }).then(function(results) {
         return results.rowCount;
       })
+    },
+    // deleteAllAssociationsAuthorBook: function(authorID) {
+    //   return knex('books_authors').where('author_id', authorID).del();
+    // },
+    deleteAuthor: function(authorID) {
+      return knex('authors').where({ 'authors.id': authorID }).del();
     }
+    // updateAuthor: function(authorID, authorData) {
+    //   return knex('authors').where('id', authorID).update({
+    //     first_name: authorData.first_name,
+    //     last_name: authorData.last_name,
+    //     bio: authorData.bio,
+    //     portrait_url: authorData.portrait_url
+    //   })
+    // }
   }
 };

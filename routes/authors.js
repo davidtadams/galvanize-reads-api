@@ -84,10 +84,22 @@ router.post('/new', function(req, res, next) {
       success: "Author created successfully"
     })
   });
-
 });
 
+router.delete('/:authorID/delete', function(req, res, next) {
+  api.authors.deleteAuthor(req.params.authorID).then(function(results) {
+    if (results != 1) {
+      res.json({
+        error: "Unable to delete author: " + req.params.authorID
+      })
+      return;
+    }
 
+    res.json({
+      success: "Author number: " + req.params.authorID + " was successfully deleted"
+    })
+  });
+});
 
 
 function addNewAuthor(author) {
