@@ -25,7 +25,7 @@ router.get('/', function(req, res, next) {
     }
 
     res.json(booksResponse);
-  })
+  });
 });
 
 router.get('/:bookID', function(req, res, next) {
@@ -54,8 +54,8 @@ router.get('/:bookID', function(req, res, next) {
     }
 
     res.json(bookResponse);
-  })
-})
+  });
+});
 
 router.post('/new', function(req, res, next) {
   if (req.body['title'] === undefined
@@ -84,9 +84,9 @@ router.post('/new', function(req, res, next) {
 
     res.json({
       success: "Book created successfully"
-    });
-  })
-})
+    })
+  });
+});
 
 router.delete('/:bookID/delete', function(req, res, next) {
   api.books.deleteBook(req.params.bookID).then(function(results) {
@@ -100,12 +100,49 @@ router.delete('/:bookID/delete', function(req, res, next) {
     res.json({
       success: "Book number: " + req.params.bookID + " was successfully deleted"
     })
-  })
-})
+  });
+});
 
 router.put('/:bookID/edit', function(req, res, next) {
-  console.log('delete a book');
-})
+  if (req.body['title'] === undefined
+        || req.body['genre'] === undefined
+        || req.body['description'] === undefined
+        || req.body['cover_url'] === undefined) {
+    res.json({
+      error: "The put data is incomplete",
+      documentation: 'https://github.com/davidtadams/galvanize-reads-api/blob/master/README.md'
+    });
+    return;
+  }
+
+  api.books.updateBook(req.params.bookID, req.body).then(function(results) {
+    if (results != 1) {
+      res.json({
+        error: "Book not edited correctly1"
+      })
+      return;
+    }
+    api.books.deleteAllAssociationsBookAuthor(req.params.bookID).then(function(results) {
+      for (var i = 0; i < req.body.authors.length; i++) {
+        api.books.associateBookAuthor(req.params.bookID, req.body.authors[i])
+          .then(function(results) {
+            if (results != 1) {
+              res.json({
+                error: "Book not created correctly3"
+              })
+              return;
+            }
+          })
+      }
+
+      res.json({
+        success: "Book number: " + req.params.bookID + " edited successfully"
+      })
+    }).catch(function(error) {
+      console.log(error);
+    })
+  });
+});
 
 
 function addNewBook(book) {

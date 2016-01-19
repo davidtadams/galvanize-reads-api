@@ -43,8 +43,19 @@ module.exports = {
         return results.rowCount;
       })
     },
+    deleteAllAssociationsBookAuthor: function(bookID) {
+      return knex('books_authors').where('book_id', bookID).del();
+    },
     deleteBook: function(bookID) {
       return knex('books').where({ 'books.id': bookID }).del();
+    },
+    updateBook: function(bookID, bookData) {
+      return knex('books').where('id', bookID).update({
+        title: bookData.title,
+        genre: bookData.genre,
+        description: bookData.description,
+        cover_url: bookData.cover_url
+      })
     }
   },
   authors: {
