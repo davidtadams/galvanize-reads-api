@@ -60,13 +60,38 @@ module.exports = {
   },
   authors: {
     getAllAuthors: function() {
-      return knex ('authors').select(
+      return knex('authors').select(
         'authors.*',
         'books.id as book_id',
         'books.title as book_title'
       ).leftJoin("books_authors", "authors.id", "books_authors.author_id")
       .leftJoin("books", "books.id", "books_authors.book_id")
       .orderBy("authors.id", 'desc');
+    },
+    getOneAuthor: function(authorID) {
+      return knex('authors').select(
+        'authors.*',
+        'books.id as book_id',
+        'books.title as book_title'
+      ).leftJoin("books_authors", "authors.id", "books_authors.author_id")
+      .leftJoin("books", "books.id", "books_authors.book_id")
+      .where({'authors.id': authorID});
+    },
+    createAuthor: function(authorData) {
+      return knex('authors').insert({
+        first_name: authorData.first_name,
+        last_name: authorData.last_name,
+        bio: authorData.bio,
+        portrait_url: authorData.portrait_url
+      }, 'id')
+    },
+    associateAuthorBook: function(author_id, book_id) {
+      return knex('books_authors').insert({
+        book_id: book_id,
+        author_id: author_id
+      }).then(function(results) {
+        return results.rowCount;
+      })
     }
   }
 };
