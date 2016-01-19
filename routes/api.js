@@ -17,6 +17,16 @@ module.exports = {
       .leftJoin("authors", "authors.id", "books_authors.author_id")
       .orderBy('books.id', 'desc');
     },
+    getOneBook: function(bookID) {
+      return knex('books').select(
+        'books.*',
+        'authors.id as author_id',
+        'authors.first_name',
+        'authors.last_name'
+      ).leftJoin("books_authors", "books.id", "books_authors.book_id")
+      .leftJoin("authors", "authors.id", "books_authors.author_id")
+      .where({'books.id': bookID});
+    },
     createBook: function(bookData) {
       return knex('books').insert({
         title: bookData.title,
@@ -32,6 +42,9 @@ module.exports = {
       }).then(function(results) {
         return results.rowCount;
       })
+    },
+    deleteBook: function(bookID) {
+      return knex('books').where({ 'books.id': bookID }).del();
     }
   },
   authors: {

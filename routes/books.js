@@ -28,6 +28,35 @@ router.get('/', function(req, res, next) {
   })
 });
 
+router.get('/:bookID', function(req, res, next) {
+  api.books.getOneBook(req.params.bookID).then(function(book) {
+    if (book.length <= 0) {
+      res.json({
+        error: "Book number: " + req.params.bookID + " does not exist"
+      });
+      return;
+    }
+
+    var bookResponse = { 'data': [] };
+
+    for (var i = 0; i < book.length; i++) {
+      if (i === 0) {
+        //add first book
+        bookResponse.data.push(addNewBook(book[i]));
+      } else {
+        //add additional authors
+        bookResponse.data[bookResponse.data.length - 1].authors.push({
+          author_id: book[i].author_id,
+          first_name: book[i].first_name,
+          last_name: book[i].last_name
+        });
+      }
+    }
+
+    res.json(bookResponse);
+  })
+})
+
 router.post('/new', function(req, res, next) {
   if (req.body['title'] === undefined
         || req.body['genre'] === undefined
@@ -46,7 +75,7 @@ router.post('/new', function(req, res, next) {
         .then(function(results) {
           if (results != 1) {
             res.json({
-              error: "Book not craeted correctly"
+              error: "Book not created correctly"
             })
             return;
           }
@@ -57,6 +86,25 @@ router.post('/new', function(req, res, next) {
       success: "Book created successfully"
     });
   })
+})
+
+router.delete('/:bookID/delete', function(req, res, next) {
+  api.books.deleteBook(req.params.bookID).then(function(results) {
+    if (results != 1) {
+      res.json({
+        error: "Unable to delete book: " + req.params.bookID
+      })
+      return;
+    }
+
+    res.json({
+      success: "Book number: " + req.params.bookID + " was successfully deleted"
+    })
+  })
+})
+
+router.put('/:bookID/edit', function(req, res, next) {
+  console.log('delete a book');
 })
 
 
